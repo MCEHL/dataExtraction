@@ -32,6 +32,23 @@ public class Main {
 
         JSONObject root = new JSONObject(response);
 
+        //System.out.println("Key: " + key + " Value: " + value);
+        //System.out.println(root.toString(4));
+
+        /*
+        Delas upp per dag
+            date - /timeseries[i]/time //ta bort tid, ha bara datum
+        */
+
+
+
+
+
+
+
+
+
+// ----- Following is the stuff needed to create a new day forecast object -----
 
         // Getting the created date
         String created = "/createdTime";
@@ -45,24 +62,6 @@ public class Main {
         JSONArray coordsValue = (JSONArray) root.query(statCoords);
         double longitude = (double) coordsValue.get(0);
         double latitude = (double) coordsValue.get(1);
-
-        System.out.println("Key: " + statCoords + " Class: " + longitude+", "+latitude);
-
-        //System.out.println(root.toString(4));
-
-        /*
-        Gäller för alla dagar
-            stationLongitude - /geometry/coordinates[0]
-            stationLatitude - /geometry/coordinates[1]
-            forecastCreated - /createdTime
-
-        Delas upp per dag?
-            date - /timeseries[i]/time //ta bort tid, ha bara datum
-
-
-
-
-             */
 
     }
 

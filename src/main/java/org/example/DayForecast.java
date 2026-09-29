@@ -13,7 +13,7 @@ public class DayForecast {
     private float minAmountRain, maxAmountRain;
 
 
-    public DayForecast(LocalDate date, LocalDateTime forecastCreated, double stationLongitude, double stationLatitude, String stationName, String todaysRawData) {
+    public DayForecast(LocalDate date, LocalDateTime forecastCreated, double stationLongitude, double stationLatitude, String todaysRawData) {
         this.date = date;
         this.forecastCreated = forecastCreated;
         this.stationLongitude = stationLongitude;
