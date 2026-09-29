@@ -54,10 +54,12 @@ public class APICommunication {
 
     }
 
-    // https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/16.158/lat/58.5812/data.json        //<- dinos, norrköping?
-    // https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/11.9059/lat/57.8558/data.json        //<- dinos, göteborg?
+
 
     /*
+      https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/16.158/lat/58.5812/data.json        //<- dinos, norrköping?
+      https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/11.9059/lat/57.8558/data.json        //<- dinos, göteborg?
+
     build url
                     https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/{longitude}/lat/{latitude}/data.json   <- All data
 
