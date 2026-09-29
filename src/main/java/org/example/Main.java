@@ -2,9 +2,6 @@ package org.example;
 import org.json.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static org.example.ForecastQueryParameters.*;
 
@@ -15,7 +12,7 @@ public class Main {
         String response;
 
         try {
-            response = request.getForecast(11.9059, 57.8558, 5, symbol_code,
+            response = request.getForecast(11.9059, 57.8558, -1, symbol_code,
                     cloud_area_fraction,
                     probability_of_precipitation,
                     precipitation_amount_max,
@@ -32,36 +29,6 @@ public class Main {
 
         JSONObject root = new JSONObject(response);
 
-        //System.out.println("Key: " + key + " Value: " + value);
-        //System.out.println(root.toString(4));
-
-        /*
-        Delas upp per dag
-            date - /timeseries[i]/time //ta bort tid, ha bara datum
-        */
-
-
-
-
-
-
-
-
-
-// ----- Following is the stuff needed to create a new day forecast object -----
-
-        // Getting the created date
-        String created = "/createdTime";
-        String createdValue = (String) root.query(created);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        LocalDateTime dateTime = LocalDateTime.parse(createdValue, formatter);
-        LocalDate createdDate = dateTime.toLocalDate();
-
-        // Getting station longitude and latitude
-        String statCoords = "/geometry/coordinates";
-        JSONArray coordsValue = (JSONArray) root.query(statCoords);
-        double longitude = (double) coordsValue.get(0);
-        double latitude = (double) coordsValue.get(1);
 
     }
 
