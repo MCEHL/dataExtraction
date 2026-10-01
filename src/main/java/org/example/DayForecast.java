@@ -15,7 +15,7 @@ public class DayForecast {
 
 //-- weather data --
     private boolean willRain;
-    private float minAmountRain, maxAmountRain;
+    private double minAmountRain, maxAmountRain;
 
 
     public DayForecast(LocalDate date, LocalDateTime forecastCreated, double stationLongitude, double stationLatitude, JSONArray todaysTimeseries) {
@@ -24,69 +24,51 @@ public class DayForecast {
         this.stationLongitude = stationLongitude;
         this.stationLatitude = stationLatitude;
         this.todaysTimeseries = todaysTimeseries;
+
+        updateRain();
+
     }
 
-    public ArrayList<DayForecast> createForecasts(JSONObject root){
-        ArrayList<DayForecast> forecasts = new ArrayList<>();
+    public void updateRain(){
+        JSONArray timeseries = this.todaysTimeseries;
 
-    // ---- Created date, long and lat is same for all days and therefore all forecasts ----
+        // vill veta vad min, max rain är + will rain?
+        for (int i = 0; i < timeseries.length(); i++) {
+            JSONObject data = (JSONObject) timeseries.getJSONObject(i).query("/data");
 
-        // Getting the created date
-        String createdKey = "/createdTime";
-        String createdValue = (String) root.query(createdKey);  //get value
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        LocalDateTime createdDate = LocalDateTime.parse(createdValue, formatter);       //format to correct type
-
-
-        // Getting station longitude and latitude
-        String coordsKey = "/geometry/coordinates";
-        JSONArray coordsValue = (JSONArray) root.query(coordsKey);  //get value
-        double longitude = (double) coordsValue.get(0);     //get longitude
-        double latitude = (double) coordsValue.get(1);      //get latitude
-
-
-    // ---- Data for all days are lumped together, first split them into separate days ----
-
-        JSONArray series = root.getJSONArray("timeSeries");
-        JSONObject byDay = new JSONObject();   // "2026-09-29" -> JSONArray of entries
-
-        // For every entry in time series:
-        for (int i = 0; i < series.length(); i++) {
-            JSONObject entry = series.getJSONObject(i); //Get entry
-
-            // Convert to local time
-            String day = Instant.parse(entry.getString("intervalParametersStartTime"))
-                    .atZone(ZoneId.of("Europe/Stockholm"))
-                    .toLocalDate()
-                    .toString();   // "2026-09-29"
-
-            if (!byDay.has(day)) { // check if list has this key
-                byDay.put(day, new JSONArray()); // if not add key and corresponding array for data storage
-            }
-            byDay.getJSONArray(day).put(entry); // add data to correct date
+            // från datan vill vi ha "precipitation_amount_max", "precipitation_amount_min"
+            this.maxAmountRain += (double) data.get("precipitation_amount_max");
+            this.minAmountRain += (double) data.get("precipitation_amount_min");
         }
 
-    /* Debugging
-        for (String day : byDay.keySet()) {
-            JSONArray entries = byDay.getJSONArray(day);
-            System.out.println(day + ": " + entries.length());//.toString(4));
-        }
-    */
+        this.willRain = (this.maxAmountRain > 0);
 
-    // ---- Now everything is split into separate days, but still in jsonobjects ---
-        for (String day : byDay.keySet()) { //for each day-key in byDay set:
-            JSONArray entries = byDay.getJSONArray(day);    //get array of timeseries
-            forecasts.add(new DayForecast(LocalDate.parse(day), createdDate, longitude, latitude, entries)); // create new forecastobject and add to array
-
-        }
-        return forecasts;
     }
 
+    public boolean getWillRain() {
+        return willRain;
+    }
+    public void setWillRain(boolean willRain) {
+        this.willRain = willRain;
+    }
+    public double getMinAmountRain() {
+        return minAmountRain;
+    }
+    public void setMinAmountRain(double minAmountRain) {
+        this.minAmountRain = minAmountRain;
+    }
+    public double getMaxAmountRain() {
+        return maxAmountRain;
+    }
+    public void setMaxAmountRain(double maxAmountRain) {
+        this.maxAmountRain = maxAmountRain;
+    }
 
     public String toString(){
 
-        return "Forecast for: "+this.date+", created on: "+this.forecastCreated+"\n"+
-                ", by station located at: longitude - "+this.stationLongitude+", latitude - "+this.stationLatitude+"\n"+
-                "timeseries: \n"+this.todaysTimeseries.toString(4);
+        return "Forecast for: "+this.date+", created on: "+this.forecastCreated+",\n"+
+                "by station located at: longitude - "+this.stationLongitude+", latitude - "+this.stationLatitude+"\n"+
+                "it will rain today: "+this.willRain+
+                "\nminimum amount of rain: "+this.minAmountRain+", maximum amount of rain: "+this.maxAmountRain;
     }
 }

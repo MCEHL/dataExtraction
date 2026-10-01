@@ -2,6 +2,9 @@ package org.example;
 import org.json.*;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
 
 import static org.example.ForecastQueryParameters.*;
 
@@ -28,7 +31,12 @@ public class Main {
 
 
         JSONObject root = new JSONObject(response);
+        ForecastBuilder build = new ForecastBuilder();
+        ArrayList<DayForecast> week = build.createForecasts(root);
 
+        for(DayForecast day : week){
+            System.out.println(day.toString()+"\n\n");
+        }
 
     }
 
