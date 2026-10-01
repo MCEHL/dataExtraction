@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class ForecastBuilder {
 
     public ArrayList<DayForecast> createForecasts(JSONObject root){
+
         ArrayList<DayForecast> forecasts = new ArrayList<>();
 
         // ---- Created date, long and lat is same for all days and therefore all forecasts ----
